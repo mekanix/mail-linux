@@ -1,0 +1,40 @@
+---
+- name: install packages
+  with_items: "{{ letsencrypt_packages }}"
+  package:
+    name: "{{ item.name }}"
+
+- name: download dehydrated
+  get_url:
+    url: "{{ letsencrypt_url }}"
+    dest: /usr/bin/dehydrated
+    mode: 0755
+
+- name: create config dir
+  file:
+    path: /etc/dehydrated
+    state: directory
+
+- name: configure letsencrypt
+  with_items: "{{ letsencrypt_config }}"
+  copy:
+    src: "{{ item.file }}"
+    dest: "/etc/dehydrated/{{ item.file }}"
+    mode: "{{ item.mode }}"
+
+- name: register letsencrypt
+  command: dehydrated --register --accept-terms
+  args:
+    creates: /etc/dehydrated/accounts
+
+- name: check if secret file exists
+  stat:
+    path: /etc/dehydrated/domains.txt
+  register: secret_result
+
+- name: create secret file
+  template:
+    src: domains.txt.j2
+    dest: /etc/dehydrated/domains.txt
+    mode: 0600
+  when: secret_result.stat.exists == False

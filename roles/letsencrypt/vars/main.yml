@@ -1,0 +1,14 @@
+---
+letsencrypt_url: https://raw.githubusercontent.com/lukas2511/dehydrated/master/dehydrated
+
+letsencrypt_packages:
+  - name: curl
+  - name: lexicon
+
+letsencrypt_config:
+  - file: config
+    mode: "0600"
+  - file: hook.sh
+    mode: "0755"
+  - file: update.sh
+    mode: "0755"

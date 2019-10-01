@@ -1,0 +1,19 @@
+---
+- name: install postfix packages
+  with_items: "{{ postfix_packages }}"
+  package:
+    name: "{{ item.name }}"
+    state: present
+
+- name: enable postfix
+  service:
+    name: postfix
+    enabled: yes
+
+- name: configure postfix
+  with_items: "{{ postfix_templates }}"
+  template:
+    src: "{{ item.filename }}.tpl"
+    dest: "{{ item.destination }}/{{ item.filename }}"
+  notify:
+    - restart postfix

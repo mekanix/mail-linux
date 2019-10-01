@@ -1,0 +1,52 @@
+---
+- name: install packages
+  with_items: "{{ dovecot_packages }}"
+  package:
+    name: "{{ item.name }}"
+
+- name: configure
+  with_items: "{{ dovecot_templates }}"
+  template:
+    src: "{{ item.src }}.j2"
+    dest: "/etc/dovecot/{{ item.dest }}/{{ item.src }}"
+  notify:
+    - restart dovecot
+
+- name: create sieve directory
+  file:
+    path: /etc/dovecot/sieve
+    mode: 0755
+    state: directory
+
+- name: configure ham filter
+  template:
+    src: "report-ham.sieve.j2"
+    dest: "/etc/dovecot/sieve/report-ham.sieve"
+  notify:
+    - compile ham
+
+- name: configure spam filter
+  template:
+    src: "report-spam.sieve.j2"
+    dest: "/etc/dovecot/sieve/report-spam.sieve"
+  notify:
+    - compile spam
+
+- name: configure spam routing
+  template:
+    src: "after.sieve.j2"
+    dest: "/etc/dovecot/sieve/after.sieve"
+  notify:
+    - compile routing
+
+- name: add learning scripts
+  with_items: "{{ dovecot_scripts }}"
+  copy:
+    src: "{{ item.name }}"
+    dest: "/etc/dovecot/sieve/{{ item.name }}"
+    mode: 0755
+
+- name: enable dovecot
+  service:
+    name: dovecot
+    enabled: yes

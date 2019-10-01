@@ -1,0 +1,15 @@
+# -*- mode: ansible -*-
+# vi: set ft=ansible :
+
+---
+- name: Mail Linux
+  hosts: all
+  become: yes
+  vars:
+    domain: lust4trust.com
+  roles:
+    - letsencrypt
+    - ldap
+    - dovecot
+    - rspamd
+    - postfix

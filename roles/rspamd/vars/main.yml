@@ -1,0 +1,5 @@
+---
+rspamd_packages:
+  - name: rspamd
+
+rspamd_key: https://rspamd.com/apt-stable/gpg.key

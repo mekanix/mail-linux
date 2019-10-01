@@ -1,0 +1,14 @@
+---
+- name: restart dovecot
+  service:
+    name: dovecot
+    state: restarted
+
+- name: compile ham
+  command: sievec /etc/dovecot/sieve/report-ham.sieve
+
+- name: compile spam
+  command: sievec /etc/dovecot/sieve/report-spam.sieve
+
+- name: compile routing
+  command: sievec /etc/dovecot/sieve/after.sieve

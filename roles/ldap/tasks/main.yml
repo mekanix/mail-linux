@@ -1,0 +1,7 @@
+---
+- name: install packages
+  with_items: "{{ ldap_packages }}"
+  package:
+    name: "{{ item.name }}"
+  notify:
+    - restart ldap

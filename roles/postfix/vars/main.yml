@@ -1,0 +1,10 @@
+---
+postfix_packages:
+  - name: postfix
+
+postfix_templates:
+  - destination: /etc/postfix
+    filename: master.cf
+
+  - destination: /etc/postfix
+    filename: main.cf

@@ -1,0 +1,11 @@
+---
+ldap_packages:
+  - name: ldap-utils
+  - name: slapd
+
+ldap_templates:
+  - destination: /etc/openldap
+    filename: slapd.conf
+
+  - destination: /etc/openldap
+    filename: ldap.conf
